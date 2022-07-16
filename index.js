@@ -95,7 +95,7 @@ client.on('interactionCreate', async (interaction) => {
         .setTitle('Minecraft user')
         .setThumbnail(userData.skin_renders.head_render)
         .addField('Username', userData.username, true)
-        .addField('Creation date', userData.created_at || 'Unknown', true)
+        .addField('Creation date', userData.created_at || 'Not available', true)
         .addField('UUID', userData.uuid);
 
       await interaction.reply({ embeds: [embedMessage] });
