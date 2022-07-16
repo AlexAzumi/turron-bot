@@ -1,4 +1,4 @@
-import util from 'minecraft-server-util';
+import * as util from 'minecraft-server-util';
 import mpi from 'mc-player-api';
 import { Client, Intents, MessageEmbed } from 'discord.js';
 
