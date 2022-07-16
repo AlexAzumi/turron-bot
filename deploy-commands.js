@@ -10,6 +10,15 @@ const commands = [
   new SlashCommandBuilder()
     .setName('server-status')
     .setDescription('Replies with the Minecraft server status'),
+  new SlashCommandBuilder()
+    .setName('mc-user')
+    .setDescription('Replies with the Minecraft user information')
+    .addStringOption((option) =>
+      option
+        .setName('username')
+        .setDescription('Minecraft username')
+        .setRequired(true)
+    ),
 ];
 
 const rest = new REST({ version: '9' }).setToken(token);

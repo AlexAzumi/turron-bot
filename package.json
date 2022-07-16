@@ -17,6 +17,7 @@
     "discord-api-types": "^0.36.2",
     "discord.js": "^13.8.1",
     "dotenv": "^16.0.1",
+    "mc-player-api": "^1.0.0",
     "minecraft-server-util": "^5.3.0",
     "nodemon": "^2.0.19"
   },

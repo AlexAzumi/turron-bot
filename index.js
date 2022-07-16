@@ -1,4 +1,5 @@
 const util = require('minecraft-server-util');
+const mpi = require('mc-player-api');
 const { Client, Intents, MessageEmbed } = require('discord.js');
 
 const { serverAddress, serverPort } = require('./config.json');
@@ -82,6 +83,26 @@ client.on('interactionCreate', async (interaction) => {
       console.error(error);
 
       await interaction.reply('The server is offline!');
+    }
+  } else if (commandName === 'mc-user') {
+    const username = interaction.options.getString('username', true);
+
+    try {
+      const userData = await mpi.getUser(username);
+
+      const embedMessage = new MessageEmbed()
+        .setColor('DARK_GREEN')
+        .setTitle('Minecraft user')
+        .setThumbnail(userData.skin_renders.head_render)
+        .addField('Username', userData.username, true)
+        .addField('Creation date', userData.created_at || 'Unknown', true)
+        .addField('UUID', userData.uuid);
+
+      await interaction.reply({ embeds: [embedMessage] });
+    } catch (error) {
+      console.error(error);
+
+      await interaction.reply('Not found user');
     }
   }
 });
