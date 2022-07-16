@@ -1,14 +1,36 @@
-import * as util from 'minecraft-server-util';
-import mpi from 'mc-player-api';
-import { Client, Intents, MessageEmbed } from 'discord.js';
+const util = require('minecraft-server-util');
+const mpi = require('mc-player-api');
+const { Client, Intents, MessageEmbed } = require('discord.js');
 
-import { getUserSample } from './functions';
+const { serverAddress, serverPort } = require('./config.json');
 
-import { serverAddress, serverPort } from '../config.json';
-
-const DISCORD_TOKEN = process.env.DISCORD_TOKEN;
+const token = process.env.DISCORD_TOKEN;
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
+
+/**
+ * Gets the string of user samples
+ * @param {Array<{ id: string, name: string }>} users - sample of users online in the server
+ * @param {number} size - Amount of samples that will be shown
+ */
+const getUserSample = (users, size) => {
+  if (!users || !users.length) {
+    return 'None';
+  }
+
+  let samplesInText = '';
+  const sampleToUse = users.slice(0, size);
+
+  sampleToUse.forEach((user) => {
+    if (!samplesInText) {
+      samplesInText = user.name;
+    } else {
+      samplesInText += `, ${user.name}`;
+    }
+  });
+
+  return samplesInText;
+};
 
 client.once('ready', () => {
   console.log('\nThe bot is up!');
@@ -85,4 +107,4 @@ client.on('interactionCreate', async (interaction) => {
   }
 });
 
-client.login(DISCORD_TOKEN);
+client.login(token);
