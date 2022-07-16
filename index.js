@@ -14,7 +14,7 @@ const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
  * @param {number} size - Amount of samples that will be shown
  */
 const getUserSample = (users, size) => {
-  if (users.length === 0) {
+  if (!users || !users.length) {
     return 'None';
   }
 
