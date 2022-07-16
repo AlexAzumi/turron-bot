@@ -7,8 +7,32 @@ const token = process.env.DISCORD_TOKEN;
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
 
+/**
+ * Gets the string of user samples
+ * @param {Array<{ id: string, name: string }>} users - sample of users online in the server
+ * @param {number} size - Amount of samples that will be shown
+ */
+const getUserSample = (users, size) => {
+  if (users.length === 0) {
+    return 'None';
+  }
+
+  let samplesInText = '';
+  const sampleToUse = users.slice(0, size);
+
+  sampleToUse.forEach((user) => {
+    if (!samplesInText) {
+      samplesInText = user.name;
+    } else {
+      samplesInText += `, ${user.name}`;
+    }
+  });
+
+  return samplesInText;
+};
+
 client.once('ready', () => {
-  console.log('Ready!');
+  console.log('\nThe bot is up!');
 });
 
 client.on('interactionCreate', async (interaction) => {
@@ -27,6 +51,7 @@ client.on('interactionCreate', async (interaction) => {
         .setColor('BLUE')
         .setTitle('Minecraft server status')
         .setDescription(serverStatus.motd.clean)
+        .setThumbnail('attachment://favicon.png')
         .addField('Server address', serverStatus.srvRecord.host, true)
         .addField('Server port', serverStatus.srvRecord.port.toString(), true)
         .addField('Server version', serverStatus.version.name, true)
@@ -37,21 +62,22 @@ client.on('interactionCreate', async (interaction) => {
         )
         .addField(
           'Online players',
-          serverStatus.players.sample > 0
-            ? serverStatus.players.sample.reduce(
-                (previousValue, currentValue, currentIndex) => {
-                  if (currentIndex === 0) {
-                    return `${currentValue.name}`;
-                  } else {
-                    return `${previousValue.name}, ${currentValue.name}`;
-                  }
-                }
-              )
-            : 'None',
+          getUserSample(serverStatus.players.sample, 5),
           true
         );
 
-      await interaction.reply({ embeds: [embedMessage] });
+      await interaction.reply({
+        files: [
+          {
+            attachment: Buffer.from(
+              serverStatus.favicon.split(',')[1],
+              'base64'
+            ),
+            name: 'favicon.png',
+          },
+        ],
+        embeds: [embedMessage],
+      });
     } catch (error) {
       console.error(error);
 
